@@ -1,65 +1,26 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useState } from "react";
-import axios from "axios";
+import { useWeather } from "../state/useWeather";
 
 type SearchInput = {
   city: string;
 };
 
-type CityData = {
-  country: "GB";
-  lat: number;
-  local_names: object;
-  lon: number;
-  name: string;
-  state: string;
-};
-
-type WeatherData = {
-  cod: string;
-  city: {
-    id: number;
-    name: string;
-    coord: {
-      lat: number;
-      lon: number;
-    };
-    country: string;
-    population: number;
-    timezone: number;
-    sunrise: number;
-    sunset: number;
-  };
-};
-
 export const SearchInput = () => {
-  const [city, setCity] = useState<CityData[]>();
-  const [weatherForecast, setWeatherForecast] = useState<WeatherData>();
-
-  const getWeather = async (url: string) => {
-    const { data } = await axios.get(url);
-    setCity(data);
-    const { lat, lon } = data[0];
-
-    const getWeatherForecastURL = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${
-      import.meta.env.VITE_API_KEY
-    }`;
-
-    const response = await axios.get(getWeatherForecastURL);
-
-    setWeatherForecast(response.data);
-  };
+  const city = useWeather((state) => state.city);
+  const weatherForecast = useWeather((state) => state.weatherForecast);
+  const isWeatherLoading = useWeather((state) => state.isWeatherLoading);
+  const getWeather = useWeather((state) => state.getWeather);
 
   const { register, handleSubmit } = useForm<SearchInput>();
 
   const onSubmit: SubmitHandler<SearchInput> = (data) => {
-    const getCityURL = `http://api.openweathermap.org/geo/1.0/direct?q=${
+    const cityURL = `http://api.openweathermap.org/geo/1.0/direct?q=${
       data.city
     }&limit=1&appid=${import.meta.env.VITE_API_KEY}`;
 
-    getWeather(getCityURL);
+    getWeather(cityURL);
   };
   return (
     <div className="flex items-center justify-center">
@@ -84,8 +45,9 @@ export const SearchInput = () => {
           </button>
         </div>
       </form>
-      {city && city[0].name}
-      {weatherForecast && weatherForecast.city.country}
+      {!isWeatherLoading && !!city.length
+        ? city[0].name + ", " + weatherForecast.city.country
+        : null}
     </div>
   );
 };
