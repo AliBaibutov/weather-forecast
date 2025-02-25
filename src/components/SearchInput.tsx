@@ -2,13 +2,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useWeather } from "../state/useWeather";
+import { WeatherForecast } from "./WeatherForecast";
 
 type SearchInput = {
   city: string;
 };
 
 export const SearchInput = () => {
-  const city = useWeather((state) => state.city);
   const weatherForecast = useWeather((state) => state.weatherForecast);
   const isWeatherLoading = useWeather((state) => state.isWeatherLoading);
   const getWeather = useWeather((state) => state.getWeather);
@@ -22,8 +22,9 @@ export const SearchInput = () => {
 
     getWeather(cityURL);
   };
+
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex flex-col gap-5 items-center justify-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-3/5 mt-10"
@@ -45,9 +46,11 @@ export const SearchInput = () => {
           </button>
         </div>
       </form>
-      {!isWeatherLoading && !!city.length
-        ? city[0].name + ", " + weatherForecast.city.country
-        : null}
+      {!isWeatherLoading ? (
+        <WeatherForecast weatherForecast={weatherForecast} />
+      ) : (
+        "Loading..."
+      )}
     </div>
   );
 };

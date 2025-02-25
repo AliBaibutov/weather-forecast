@@ -10,7 +10,7 @@ type CityData = {
   state: string;
 };
 
-type WeatherData = {
+export type WeatherData = {
   cod: string;
   city: {
     id: number;
@@ -25,18 +25,52 @@ type WeatherData = {
     sunrise: number;
     sunset: number;
   };
+  list: {
+    dt: number;
+    main: {
+      temp: number;
+      feels_like: number;
+      temp_min: number;
+      temp_max: number;
+      pressure: number;
+      sea_level: number;
+      grnd_level: number;
+      humidity: number;
+      temp_kf: number;
+    };
+    weather: {
+      id: number;
+      main: string;
+      description: string;
+      icon: string;
+    }[];
+    clouds: {
+      all: number;
+    };
+    wind: {
+      speed: number;
+      deg: number;
+      gust: number;
+    };
+    visibility: number;
+    pop: number;
+    sys: {
+      pod: string;
+    };
+    dt_txt: string;
+  }[];
 };
 
 interface WeatherState {
-  city: CityData[];
-  weatherForecast: WeatherData;
+  city: CityData[] | null;
+  weatherForecast: WeatherData | null;
   getWeather: (url: string) => void;
   isWeatherLoading: boolean;
 }
 
 export const useWeather = create<WeatherState>((set) => ({
-  city: [],
-  weatherForecast: {} as WeatherData,
+  city: null,
+  weatherForecast: null,
   isWeatherLoading: false,
   getWeather: async (url) => {
     set({ isWeatherLoading: true });
