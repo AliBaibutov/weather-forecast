@@ -3,6 +3,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useWeather } from "../state/useWeather";
 import { WeatherForecast } from "./WeatherForecast";
+import { WeatherForecastChart } from "./WeatherForecastChart";
 
 type SearchInput = {
   city: string;
@@ -47,7 +48,10 @@ export const SearchInput = () => {
         </div>
       </form>
       {!isWeatherLoading ? (
-        <WeatherForecast weatherForecast={weatherForecast} />
+        <div className="flex flex-col items-center justify-center gap-5 w-full h-full">
+          <WeatherForecast weatherForecast={weatherForecast} />
+          <WeatherForecastChart weatherForecast={weatherForecast} />
+        </div>
       ) : (
         "Loading..."
       )}
