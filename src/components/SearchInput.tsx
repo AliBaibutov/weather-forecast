@@ -4,19 +4,16 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useWeather } from "../state/useWeather";
 import { WeatherForecast } from "./WeatherForecast";
 import { WeatherForecastChart } from "./WeatherForecastChart";
-
-type SearchInput = {
-  city: string;
-};
+import { SearchInputType } from "../types";
 
 export const SearchInput = () => {
   const weatherForecast = useWeather((state) => state.weatherForecast);
   const isWeatherLoading = useWeather((state) => state.isWeatherLoading);
   const getWeather = useWeather((state) => state.getWeather);
 
-  const { register, handleSubmit } = useForm<SearchInput>();
+  const { register, handleSubmit } = useForm<SearchInputType>();
 
-  const onSubmit: SubmitHandler<SearchInput> = (data) => {
+  const onSubmit: SubmitHandler<SearchInputType> = (data) => {
     const cityURL = `http://api.openweathermap.org/geo/1.0/direct?q=${
       data.city
     }&limit=1&appid=${import.meta.env.VITE_API_KEY}`;

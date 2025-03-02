@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { WeatherData } from "../state/useWeather";
+import { WeatherData } from "../types";
 
 type Props = {
   weatherForecast: WeatherData | null;
@@ -7,7 +7,7 @@ type Props = {
 
 export const WeatherForecast: FC<Props> = ({ weatherForecast }) => {
   if (!weatherForecast) {
-    return "Нет данных";
+    return null;
   }
   return (
     <div className="flex flex-col items-center justify-center">
@@ -24,7 +24,7 @@ export const WeatherForecast: FC<Props> = ({ weatherForecast }) => {
         <div className="flex flex-col items-center justify-center">
           <p className="text-3xl font-bold">
             {weatherForecast?.list[0].main &&
-              Math.round(weatherForecast?.list[0]?.main?.temp - 273.15)}
+              weatherForecast?.list[0]?.main?.temp.toFixed(0)}
             °C
           </p>
           <p className="text-xl font-semibold">
